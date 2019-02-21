@@ -1,0 +1,40 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+    Sign in
+{% endblock title %}
+
+{% block content %}
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.login.label }}<br>
+            {{ form.login }}
+            {% for error in form.login.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.password.label }}<br>
+            {{ form.password }}
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.re_password.label }}<br>
+            {{ form.re_password }}
+            {% for error in form.re_password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock content %}
