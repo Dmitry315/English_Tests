@@ -1,11 +1,12 @@
 {% extends 'wrapper.html' %}
 
 {% block title %}
-    Авторизация
+    Authorisation
 {% endblock title %}
 
-{% block content %}
-    <h1>Авторизация</h1>
+{% block wrap %}
+    <div class="sign-auth">
+    <h1>Authorisation</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -28,4 +29,6 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
-{% endblock %}
+    <a href="{{ url_for('sign_in') }}">Sign in</a>
+    </div>
+{% endblock wrap %}

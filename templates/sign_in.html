@@ -4,7 +4,9 @@
     Sign in
 {% endblock title %}
 
-{% block content %}
+{% block wrap %}
+    <div class="sign-auth">
+    <h1>Authorisation</h1>
     <form method="post" novalidate>
         {{ form.hidden_tag() }}
         <div>
@@ -37,4 +39,5 @@
         <br>
         <p>{{ form.submit() }}</p>
     </form>
-{% endblock content %}
+    </div>
+{% endblock wrap %}

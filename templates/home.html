@@ -1,9 +1,5 @@
-{% extends 'wrapper.html' %}
-
-{% block title %}
-    Home
-{% endblock title %}
+{% extends 'home_wrapper.html' %}
 
 {% block content %}
-    hello
+    hello, {{ user.get_name() }}
 {% endblock content %}

@@ -1,0 +1,20 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+    English Easy
+{% endblock title %}
+
+{% block wrap %}
+    <nav class="navbar">
+        <span class="nav-item"><a href="{{ url_for('home') }}" >Home</a></span>
+
+        <span class="nav-item"><a href="#" >Tests</a></span>
+
+        <span class="nav-item"><a href="#" >Test Editor</a></span>
+
+        <span class="nav-item"><a href="{{ url_for('profile', id=user.get_id()) }}" >Profile</a></span>
+
+        <span class="nav-item"><a href="{{ url_for('log_out') }}">Log out</a></span>
+    </nav>
+    {% block content %}{% endblock content %}
+{% endblock wrap %}

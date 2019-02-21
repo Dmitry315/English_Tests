@@ -1,0 +1,20 @@
+{% extends 'home_wrapper.html' %}
+
+{% block content %}
+    <div class="profile">
+        <div id="username">
+            <h1>{{ user.get_name() }}</h1>
+        </div>
+        <h3>About</h3>
+        <div id="about_me">
+            <p>{{ user.get_description() }}</p>
+        </div>
+        <h3>Links</h3>
+        <div id="links">
+            {% for link in user.get_links().split() %}
+                <a href="{{ link }}">{{ link }}</a>
+            {% endfor %}
+        </div>
+        <a href="#">Edit</a>
+    </div>
+{% endblock content %}
