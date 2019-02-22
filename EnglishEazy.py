@@ -37,6 +37,31 @@ def log_out():
     session['username'] = None
     return redirect('/log_in')
 
+# TODO: ADMIN.HTML
+@app.route('/admin/tool_bar')
+def admin_tool_bar():
+    is_loged = check_session()
+    if not is_loged:
+        return redirect('/admin/log_in')
+    return render_template('admin.html')
+
+@app.route('/admin/log_in', methods=['GET', 'POST'])
+def admin_login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        login = request.form['login']
+        password = request.form['password']
+        form.login.errors = ['Wrong login']
+        form.password.errors = []
+        if login != admin['login']:
+            form.login.errors = []
+            if password != admin[password]:
+                form.password.errors = ['Wrong password']
+        if not form.login.errors and not form.password.errors:
+            session['username'] = login
+            return redirect('/')
+    return render_template('login.html', form=form)
+
 # insert user in session
 # and redirect to home page
 @app.route('/log_in', methods=['GET', 'POST'])
