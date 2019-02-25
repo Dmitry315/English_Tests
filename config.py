@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, make_response
 
 # init app and configure server
 app = Flask(__name__)

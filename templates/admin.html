@@ -1,0 +1,30 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+    Admin
+{% endblock %}
+
+{% block wrap %}
+    <h1>Admin tool bar</h1>
+
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Username</th>
+      <th scope="col">Password</th>
+      <th scope="col"><a href="/admin/add_user">ADD USER</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in model %}
+        <tr>
+            <th scope="row"><a href="/profile/{{ user.get_id() }}">{{ user.get_id() }}</a></th>
+            <td>{{ user.get_name() }}</td>
+            <td>{{ user.get_password() }}</td>
+            <td><a href="/admin/delete_user/{{ user.get_id() }}">DELETE</a></td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

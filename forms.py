@@ -12,5 +12,10 @@ class SignInForm(FlaskForm):
 # form to log user in
 class LoginForm(FlaskForm):
     login = StringField('Login', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log in')
+
+class AddUser(FlaskForm):
+    login = StringField('Login', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Add')
