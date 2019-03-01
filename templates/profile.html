@@ -15,6 +15,9 @@
                 <a href="{{ link }}">{{ link }}</a>
             {% endfor %}
         </div>
-        <a href="#">Edit</a>
+        <br>
+        {% if is_user %}
+            <a href="/edit/{{ user.get_id() }}">Edit</a>
+        {% endif %}
     </div>
 {% endblock content %}

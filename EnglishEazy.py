@@ -21,12 +21,35 @@ def home():
     is_loged = check_session()
     if not is_loged or is_loged == admin['login']:
         return redirect('/log_in')
-    print(is_loged)
     return render_template('home.html', user=UserModel.query.filter_by(username=is_loged).first())
 
 @app.route('/profile/<int:id>')
 def profile(id):
-    return render_template('profile.html', user=UserModel.query.filter_by(id=id).first())
+    user = UserModel.query.filter_by(id=id).first()
+    if not user:
+        abort(404)
+    return render_template('profile.html', user=user, is_user=(check_session() in [user.get_name(), admin['login']]))
+
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit(id):
+    is_loged = check_session()
+    if not is_loged:
+        return redirect('/log_in')
+    user = UserModel.query.filter_by(id=id).first()
+    if is_loged != user.get_name() and is_loged != admin['login']:
+        abort(403)
+    form = ProfileEdit()
+    is_success = False
+    if form.validate_on_submit():
+        if form.cancel.data:
+            return redirect('/profile/'+str(id))
+        is_success = True
+        about = request.form['about']
+        links = request.form['links']
+        user.about = about
+        user.links = links
+        db.session.commit()
+    return render_template('edit.html', user=user, form=form, is_success=is_success)
 
 # remove user from session
 # and redirect to log in
