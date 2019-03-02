@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import *
 from wtforms.validators import DataRequired
 
 # form to sign user in
@@ -23,5 +23,23 @@ class AddUser(FlaskForm):
 class ProfileEdit(FlaskForm):
     about = TextAreaField('About you')
     links = TextAreaField('Your links in social networks')
+    submit = SubmitField('Save')
+    cancel = SubmitField('Cancel')
+
+class AnswerQuestions(FlaskForm):
+    answer = StringField()
+    submit = SubmitField('Answer')
+    next = SubmitField('Next')
+
+class AddTheme(FlaskForm):
+    name = StringField('Theme')
+    submit = SubmitField('Save')
+    cancel = SubmitField('Cancel')
+
+class AddTest(FlaskForm):
+    theme = IntegerField('Id of theme', validators=[DataRequired()])
+    question = TextAreaField('Question', validators=[DataRequired()])
+    answer = StringField('Right answer', validators=[DataRequired()])
+    explanation = TextAreaField('Explanation', validators=[DataRequired()])
     submit = SubmitField('Save')
     cancel = SubmitField('Cancel')

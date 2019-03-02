@@ -1,0 +1,19 @@
+{% extends 'home_wrapper.html' %}
+
+{% block content %}
+    {% for test in tests %}
+    <div class="container-fluid">
+        <h5>№{{ test.id }}</h5>
+        <h3>{{ test.question }}</h3>
+        <br>
+        <br>
+        <div style="font-size: 10px">
+            right answer: {{ right_answer }}<br>
+            <p>
+                {{ test.explanation }}
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock content %}

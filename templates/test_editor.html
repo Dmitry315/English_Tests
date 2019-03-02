@@ -1,0 +1,49 @@
+{% extends 'wrapper.html' %}
+
+{% block wrap %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Name</th>
+          <th scope="col"><a href="/theme/add">ADD THEME</a></th>
+            <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for theme in themes %}
+            <tr>
+                <th scope="row">{{ theme.id }}</th>
+                <td>{{ theme.name }}</td>
+                <td><a href="/theme/edit/{{ theme.id }}">EDIT</a></td>
+                <td></td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+    <hr>
+    <br>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Theme</th>
+          <th scope="col"><a href="/test/add">ADD TEST</a></th>
+            <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for test in tests %}
+            <tr>
+                <th scope="row"><a href="/test/{{ test.id }}">{{ test.id }}</a></th>
+                <td>{{ test.theme_id }}</td>
+                <td><a href="/test/delete/{{ test.id }}">DELETE</a></td>
+                <td><a href="/test/edit/{{ test.id }}">EDIT</a></td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+{% endblock wrap %}

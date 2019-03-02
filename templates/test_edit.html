@@ -1,0 +1,51 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+    Authorisation
+{% endblock title %}
+
+{% block wrap %}
+    <div class="sign-auth">
+    <h1>Test</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.theme.label }}<br>
+            {{ form.theme }}<br>
+            {% for error in form.theme.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.question.label }}<br>
+            {{ form.question }}<br>
+            {% for error in form.question.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.answer.label }}, for more then 1 answers use "||" <br>
+            {{ form.answer }}<br>
+            {% for error in form.answer.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.explanation.label }}<br>
+            {{ form.explanation }}<br>
+            {% for error in form.explanation.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        {{ form.submit() }} {{ form.cancel() }}
+    </form>
+    </div>
+{% endblock wrap %}

@@ -1,0 +1,24 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}
+    Authorisation
+{% endblock title %}
+
+{% block wrap %}
+    <div class="sign-auth">
+    <h1>Theme</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        {{ form.submit() }} {{ form.cancel() }}
+    </form>
+    </div>
+{% endblock wrap %}

@@ -7,23 +7,31 @@
 {% block wrap %}
     <h1>Admin tool bar</h1><a href ="/log_out">Log out</a>
     <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Username</th>
-      <th scope="col">Password</th>
-      <th scope="col"><a href="/admin/add_user">ADD USER</a></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in model %}
+      <thead>
         <tr>
-            <th scope="row"><a href="/profile/{{ user.get_id() }}">{{ user.get_id() }}</a></th>
-            <td>{{ user.get_name() }}</td>
-            <td>{{ user.get_password() }}</td>
-            <td><a href="/admin/delete_user/{{ user.get_id() }}">DELETE</a></td>
+          <th scope="col">Id</th>
+          <th scope="col">Username</th>
+          <th scope="col">Password</th>
+          <th scope="col"><a href="/admin/add_user">ADD USER</a></th>
+            <th scope="col"></th>
         </tr>
-    {% endfor %}
-  </tbody>
-</table>
+      </thead>
+      <tbody>
+        {% for user in model %}
+            <tr>
+                <th scope="row"><a href="/profile/{{ user.get_id() }}">{{ user.get_id() }}</a></th>
+                <td>{{ user.get_name() }}</td>
+                <td>{{ user.get_password() }}</td>
+                <td><a href="/admin/delete_user/{{ user.get_id() }}">DELETE</a></td>
+                <td>
+                    {% if user.is_teacher %}
+                        <a href="/admin/switch_status/{{ user.get_id() }}">MAKE STUDENT</a>
+                    {% else %}
+                        <a href="/admin/switch_status/{{ user.get_id() }}">MAKE TEACHER</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 {% endblock %}

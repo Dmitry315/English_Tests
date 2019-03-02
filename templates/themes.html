@@ -1,0 +1,10 @@
+{% extends 'home_wrapper.html' %}
+
+{% block content %}
+    {% for theme in themes %}
+        <br>
+        <a href="/test/all/{{ theme.id }}">{{ theme.name }}</a> - all<br>
+        <a href="/test/random/{{ theme.id }}">{{ theme.name }}</a> - random mode<br>
+        <hr>
+    {% endfor %}
+{% endblock content %}
