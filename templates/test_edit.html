@@ -10,13 +10,19 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.theme.label }}<br>
-            {{ form.theme }}<br>
-            {% for error in form.theme.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
+{#            {{ form.theme.label }}<br>#}
+{#            {{ form.theme }}<br>#}
+{#            {% for error in form.theme.errors %}#}
+{#                <div class="alert alert-danger" role="alert">#}
+{#                    {{ error }}#}
+{#                </div>#}
+{#            {% endfor %}#}
+            Chose theme<br>
+            <select class="form-control" name="theme">
+                {% for theme in themes %}
+                    <option>{{ theme.name }}</option>
+                {% endfor %}
+            </select>
         </p>
         <p>
             {{ form.question.label }}<br>

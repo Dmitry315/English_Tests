@@ -37,7 +37,7 @@ class AddTheme(FlaskForm):
     cancel = SubmitField('Cancel')
 
 class AddTest(FlaskForm):
-    theme = IntegerField('Id of theme', validators=[DataRequired()])
+    # theme = IntegerField('Id of theme', validators=[DataRequired()])
     question = TextAreaField('Question', validators=[DataRequired()])
     answer = StringField('Right answer', validators=[DataRequired()])
     explanation = TextAreaField('Explanation', validators=[DataRequired()])

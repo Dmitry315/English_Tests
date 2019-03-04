@@ -171,7 +171,8 @@ def test_add():
     user = UserModel.query.filter_by(username=is_loged).first()
     if not user.is_teacher:
         abort(403)  # only teachers can edit tests
-    test = TestModel.query.filter_by(id=id)
+    # test = TestModel.query.filter_by(id=id)
+    themes = Theme.query.all()
     form = AddTest()
     if form.validate_on_submit() or form.cancel.data:
         form.theme.errors = []
@@ -181,16 +182,14 @@ def test_add():
         question = request.form['question']
         answer = request.form['answer']
         explanation = request.form['explanation']
-        theme_model = Theme.query.filter_by(id=theme).first()
+        theme_model = Theme.query.filter_by(name=theme).first()
         if theme_model:
             test = TestModel(question=question, right_answer=answer,
                              explanation=explanation, author_id=user.id)
             theme_model.TestModel.append(test)
             db.session.commit()
             return redirect('/test_editor')
-        else:
-            form.theme.errors='Wrong theme id'
-    return render_template('test_edit.html', form=form)
+    return render_template('test_edit.html', form=form, themes=themes)
 
 @app.route('/test/edit/<int:id>', methods=['GET', 'POST'])
 def test_edit(id):
@@ -202,6 +201,7 @@ def test_edit(id):
         abort(403)  # only teachers can edit tests
     test = TestModel.query.filter_by(id=id)
     form = AddTest()
+    themes = Theme.query.all()
     if form.validate_on_submit() or form.cancel.data:
         form.theme.errors = []
         if form.cancel.data:
@@ -210,7 +210,7 @@ def test_edit(id):
         question = request.form['question']
         answer = request.form['answer']
         explanation = request.form['explanation']
-        theme_model = Theme.query.filter_by(id=theme).first()
+        theme_model = Theme.query.filter_by(name=theme).first()
         if theme_model:
             test2 = TestModel(question=question, right_answer=answer,
                              explanation=explanation, author_id=user.id)
@@ -218,9 +218,7 @@ def test_edit(id):
             db.session.delete(test)
             db.session.commit()
             return redirect('/test_editor')
-        else:
-            form.theme.errors='Wrong theme id'
-    return render_template('test_edit.html', form=form)
+    return render_template('test_edit.html', form=form, themes=themes)
 
 @app.route('/test_editor')
 def edit_tests():
