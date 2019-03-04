@@ -118,7 +118,7 @@ def test_delete(id):
     user = UserModel.query.filter_by(username=is_loged).first()
     if not user.is_teacher:
         abort(403)  # only teachers can edit tests
-    db.session.delete(TestModel.query.filter_by(id=id))
+    db.session.delete(TestModel.query.filter_by(id=id).first())
     db.session.commit()
     return redirect('/test_editor')
 
@@ -133,7 +133,7 @@ def theme_edit(id):
     user = UserModel.query.filter_by(username=is_loged).first()
     if not user.is_teacher :
         abort(403)  # only teachers can edit tests
-    theme = Theme.query.filter_by(id=id)
+    theme = Theme.query.filter_by(id=id).first()
     form = AddTheme()
     if form.validate_on_submit() or form.cancel.data:
         if form.cancel.data:
@@ -175,7 +175,6 @@ def test_add():
     themes = Theme.query.all()
     form = AddTest()
     if form.validate_on_submit() or form.cancel.data:
-        form.theme.errors = []
         if form.cancel.data:
             return redirect('/test_editor')
         theme = request.form['theme']
@@ -199,11 +198,10 @@ def test_edit(id):
     user = UserModel.query.filter_by(username=is_loged).first()
     if not user.is_teacher:
         abort(403)  # only teachers can edit tests
-    test = TestModel.query.filter_by(id=id)
+    test = TestModel.query.filter_by(id=id).first()
     form = AddTest()
     themes = Theme.query.all()
     if form.validate_on_submit() or form.cancel.data:
-        form.theme.errors = []
         if form.cancel.data:
             return redirect('/test_editor')
         theme = request.form['theme']
