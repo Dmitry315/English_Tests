@@ -65,7 +65,7 @@ def show_all_tests(id):
     is_loged = check_session()
     if not is_loged and is_loged == admin['login']:
         return redirect('/log_in')
-    tests = TestModel.query.filter_by(id=id)
+    tests = TestModel.query.filter_by(id=id).all()
     user = UserModel.query.filter_by(username=is_loged).first()
     if not tests:
         abort(404)
@@ -80,6 +80,9 @@ def show_tests_random(id):
     user = UserModel.query.filter_by(username=is_loged).first()
     form = AnswerQuestions()
     form.answer.errors = []
+    tests = TestModel.query.filter_by(id=id).all()
+    if not tests:
+        abort(404)
     if form.validate_on_submit() and form.submit.data:
         answer = request.form['answer']
         test = TestModel.query.filter_by(id=session['test_id']).first()
@@ -150,7 +153,7 @@ def theme_add():
     if not user.is_teacher or is_loged == admin['login']:
         abort(403)  # only teachers can edit tests
     form = AddTheme()
-    if form.validate_on_submit():
+    if form.validate_on_submit() or form.cancel.data:
         if form.cancel.data:
             return redirect('/test_editor')
         name = request.form['name']
@@ -170,7 +173,7 @@ def test_add():
         abort(403)  # only teachers can edit tests
     test = TestModel.query.filter_by(id=id)
     form = AddTest()
-    if form.validate_on_submit():
+    if form.validate_on_submit() or form.cancel.data:
         form.theme.errors = []
         if form.cancel.data:
             return redirect('/test_editor')
