@@ -6,30 +6,48 @@ from models import *
 db.create_all()
 
 def abort_if_user_not_found(id):
-    if not UserModel.query.filter_by(id = id):
+    if not UserModel.query.filter_by(id = id).first():
         abort(404, message="User {} not found".format(id))
 
 def abort_if_test_not_found(id):
-    if not TestModel.query.filter_by(id=id):
+    if not TestModel.query.filter_by(id=id).first():
         abort(404, message="Test {} not found".format(id))
 
+def abort_if_theme_not_found(name):
+    if not Theme.query.filter_by(name=name).first():
+        abort(404, message="Theme {} not found".format(id))
 # API classes
 class User(Resource):
     def get(self, id):
         abort_if_user_not_found(id)
-        user = UserModel.query.filter_by(id=id).first()
+        user = UserModel.query.filter_by(id=id).first().get_all()
         return jsonify({'user': user})
+
+api.add_resource(User, '/user/<int:id>')
 
 class UserList(Resource):
     def get(self):
-        users = UserModel.query.all()
+        users = [i.get_all() for i in UserModel.query.all()]
         return jsonify({'users': users})
 
-class Tests(Resource):
+api.add_resource(UserList, '/users')
+
+class Test(Resource):
     def get(self, id):
         abort_if_test_not_found(id)
-        test = TestModel.query.filter_by(id=id)
+        test = TestModel.query.filter_by(id=id).first().get_all()
         return jsonify({'test': test})
+
+api.add_resource(Test, '/test/<int:id>')
+
+class TestByTheme(Resource):
+    def get(self, theme_name):
+        abort_if_theme_not_found(theme_name.replace('_', ' '))
+        theme = Theme.query.filter_by(name=theme_name.replace('_', ' ')).first()
+        tests = [i.get_all() for i in TestModel.query.filter_by(theme_id=theme.id).all()]
+        return jsonify({'tests': tests})
+
+api.add_resource(TestByTheme, '/test/theme/<theme_name>')
 
 # return user's login if session is not empty
 def check_session():
@@ -134,7 +152,7 @@ def theme_edit(id):
     if not user.is_teacher :
         abort(403)  # only teachers can edit tests
     theme = Theme.query.filter_by(id=id).first()
-    form = AddTheme()
+    form = AddTheme(name=theme.name)
     if form.validate_on_submit() or form.cancel.data:
         if form.cancel.data:
             return redirect('/test_editor')
@@ -199,7 +217,8 @@ def test_edit(id):
     if not user.is_teacher:
         abort(403)  # only teachers can edit tests
     test = TestModel.query.filter_by(id=id).first()
-    form = AddTest()
+    form = AddTest(question=test.question, answer=test.right_answer,
+                   explanation=test.explanation)
     themes = Theme.query.all()
     if form.validate_on_submit() or form.cancel.data:
         if form.cancel.data:
@@ -247,7 +266,7 @@ def edit(id):
     user = UserModel.query.filter_by(id=id).first()
     if is_loged != user.get_name() and is_loged != admin['login']:
         abort(403)
-    form = ProfileEdit()
+    form = ProfileEdit(about=user.about, links=user.links)
     is_success = False
     if form.validate_on_submit():
         if form.cancel.data:
@@ -309,6 +328,7 @@ def add_user():
                 password=password,
                 about='',
                 links='',
+                is_teacher=False
             ))
             db.session.commit()
             return redirect('/admin/tool_bar')

@@ -11,6 +11,11 @@ seed()
 
 # init API
 api = Api(app)
+parser = reqparse.RequestParser()
+parser.add_argument('theme_name', required=True)
+parser.add_argument('content', required=True)
+parser.add_argument('user_id', required=True, type=int)
+
 
 # add data base
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'

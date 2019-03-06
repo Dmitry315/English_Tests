@@ -10,7 +10,7 @@ class UserModel(db.Model):
     links = db.Column(db.String(64), unique=False, nullable=True)
     is_teacher = db.Column(db.Boolean, nullable=False)
 
-    def __repr__(self):
+    def get_all(self):
         return {'id': self.id, 'username': self.username, 'about': self.about, 'links': self.links}
 
     def get_description(self):
@@ -34,7 +34,7 @@ class Theme(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
 
-    def __repr__(self):
+    def get_all(self):
         return {'id': self.id, 'name':self.name}
 
 # model for tasks
@@ -51,4 +51,9 @@ class TestModel(db.Model):
     def __repr__(self):
         return '<br>'.join([str(self.id), str(self.theme_id), self.question,
                             self.right_answer, self.explanation, str(self.author_id)])
+
+    def get_all(self):
+        return {'id': self.id, 'theme id': self.theme_id,
+                'question': self.question, 'right answer': self.right_answer,
+                'explanation': self.explanation, 'author id': self.author_id}
 
