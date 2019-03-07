@@ -8,12 +8,13 @@
         <br>
         <br>
         <div style="font-size: 10px">
-            right answer: {{ right_answer }}<br>
+            right answer: {{ test.right_answer }}<br>
             <p>
                 {{ test.explanation }}
             </p>
         </div>
-    </div>
+    </div><br>
+        <hr size="10px" color="black">
     {% endfor %}
 
 {% endblock content %}

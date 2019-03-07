@@ -42,7 +42,7 @@ class TestModel(db.Model):
     __tablename__ = 'test_model'
     id = db.Column(db.Integer, primary_key=True)
     theme_id = db.Column(db.Integer, db.ForeignKey('theme.id'), nullable=False)
-    question = db.Column(db.String(512), unique=True, nullable=False)
+    question = db.Column(db.String(512), unique=False, nullable=False)
     right_answer = db.Column(db.String(64), unique=False, nullable=True) # use || if more than one questions
     explanation = db.Column(db.String(256), unique=False, nullable=True)
     author_id = db.Column(db.Integer, unique=False, nullable=False)

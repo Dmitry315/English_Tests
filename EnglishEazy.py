@@ -58,9 +58,13 @@ def check_session():
     except KeyError as err:
         return False
 
+@app.route('/')
+def represent():
+    return render_template('landing.html')
+
 # home page with nav bar
 # if session is empty redirect to log in
-@app.route('/')
+@app.route('/home')
 def home():
     is_loged = check_session()
     if not is_loged or is_loged == admin['login']:
@@ -75,7 +79,7 @@ def show_themes():
         return redirect('/log_in')
     themes = Theme.query.all()
     user = UserModel.query.filter_by(username=is_loged).first()
-    return render_template('themes.html', themes=themes, user=user)
+    return render_template('tests/themes.html', themes=themes, user=user)
 
 # show all tests in thic category
 @app.route('/test/all/<int:id>')
@@ -83,11 +87,11 @@ def show_all_tests(id):
     is_loged = check_session()
     if not is_loged and is_loged == admin['login']:
         return redirect('/log_in')
-    tests = TestModel.query.filter_by(id=id).all()
+    tests = TestModel.query.filter_by(theme_id=id)
     user = UserModel.query.filter_by(username=is_loged).first()
     if not tests:
         abort(404)
-    return render_template('all_tests.html', tests=tests, user=user)
+    return render_template('tests/all_tests.html', tests=tests, user=user)
 
 # make quiz from random tasks
 @app.route('/test/random/<int:id>', methods=['GET', 'POST'])
@@ -98,7 +102,7 @@ def show_tests_random(id):
     user = UserModel.query.filter_by(username=is_loged).first()
     form = AnswerQuestions()
     form.answer.errors = []
-    tests = TestModel.query.filter_by(id=id).all()
+    tests = TestModel.query.filter_by(theme_id=id).all()
     if not tests:
         abort(404)
     if form.validate_on_submit() and form.submit.data:
@@ -107,16 +111,16 @@ def show_tests_random(id):
         right_answers = [i.strip() for i in test.right_answer.split('||')]
         if answer not in right_answers:
             form.answer.errors = ['No, right answer is']
-        return render_template('test.html', test=test, form=form, next=True,
-                               right_answers='or'.join(right_answers), user=user)
-
+        return render_template('tests/test.html', test=test, form=form, next=True,
+                               right_answers=' or '.join([i.upper() for i in right_answers]), user=user)
     test = choice(list(TestModel.query.filter_by(theme_id=id)))
     session['test_id'] = test.id
-    return render_template('test.html', test=test, form=form, next=False, right_answers=[], user=user)
+    return render_template('tests/test.html', test=test, form=form, next=False, right_answers=[], user=user)
 
 ###########
 # TEACHER #
 ###########
+# show test by id
 @app.route('/test/<int:id>')
 def show_test(id):
     is_loged = check_session()
@@ -160,7 +164,7 @@ def theme_edit(id):
         theme.name = name
         db.session.commit()
         return redirect('/test_editor')
-    return render_template('theme_edit.html', form=form)
+    return render_template('tests/theme_edit.html', form=form)
 
 @app.route('/theme/add', methods=['GET', 'POST'])
 def theme_add():
@@ -179,7 +183,7 @@ def theme_add():
         db.session.add(theme)
         db.session.commit()
         return redirect('/test_editor')
-    return render_template('theme_edit.html', form=form)
+    return render_template('tests/theme_edit.html', form=form)
 
 @app.route('/test/add', methods=['GET', 'POST'])
 def test_add():
@@ -197,7 +201,7 @@ def test_add():
             return redirect('/test_editor')
         theme = request.form['theme']
         question = request.form['question']
-        answer = request.form['answer']
+        answer = request.form['answer'].replace('||', ' || ')
         explanation = request.form['explanation']
         theme_model = Theme.query.filter_by(name=theme).first()
         if theme_model:
@@ -206,8 +210,9 @@ def test_add():
             theme_model.TestModel.append(test)
             db.session.commit()
             return redirect('/test_editor')
-    return render_template('test_edit.html', form=form, themes=themes)
+    return render_template('tests/test_edit.html', form=form, themes=themes)
 
+# edit test by deleting old and adding new
 @app.route('/test/edit/<int:id>', methods=['GET', 'POST'])
 def test_edit(id):
     is_loged = check_session()
@@ -229,14 +234,16 @@ def test_edit(id):
         explanation = request.form['explanation']
         theme_model = Theme.query.filter_by(name=theme).first()
         if theme_model:
+            db.session.delete(test)
             test2 = TestModel(question=question, right_answer=answer,
                              explanation=explanation, author_id=user.id)
             theme_model.TestModel.append(test2)
-            db.session.delete(test)
+
             db.session.commit()
             return redirect('/test_editor')
-    return render_template('test_edit.html', form=form, themes=themes)
+    return render_template('tests/test_edit.html', form=form, themes=themes)
 
+# show test teacher's tool bar
 @app.route('/test_editor')
 def edit_tests():
     is_loged = check_session()
@@ -247,7 +254,7 @@ def edit_tests():
         abort(403) # only teachers can edit tests
     tests = TestModel.query.all()
     themes = Theme.query.all()
-    return render_template('test_editor.html', tests=tests, themes=themes)
+    return render_template('tests/test_editor.html', tests=tests, themes=themes)
 
 # show user's profile (allowed for all users)
 @app.route('/profile/<int:id>')
@@ -321,7 +328,7 @@ def add_user():
         user = UserModel.query.filter_by(username=login).first()
         if bool(user) or login == admin['login']:
             form.login.errors = ['User with this login already exist.']
-            return render_template('add_user.html', form=form)
+            return render_template('admin/add_user.html', form=form)
         if not form.login.errors and not form.password.errors:
             db.session.add(UserModel(
                 username=login,
@@ -332,7 +339,7 @@ def add_user():
             ))
             db.session.commit()
             return redirect('/admin/tool_bar')
-    return render_template('add_user.html', form=form)
+    return render_template('admin/add_user.html', form=form)
 
 # render admin tool bar
 # if user not loged as admin
@@ -343,7 +350,7 @@ def admin_tool_bar():
     if is_loged != admin['login']:
         return redirect('/admin/log_in')
     model =  UserModel.query.all()
-    return render_template('admin.html', model=model)
+    return render_template('admin/admin.html', model=model)
 
 # authorisation of admin
 @app.route('/admin', methods=['GET', 'POST'])
@@ -395,7 +402,7 @@ def login():
                 form.password.errors = ['Wrong password']
         if not form.login.errors and not form.password.errors:
             session['username'] = login
-            return redirect('/')
+            return redirect('/home')
     return render_template('login.html', form=form, is_admin=False)
 
 # sign user in system

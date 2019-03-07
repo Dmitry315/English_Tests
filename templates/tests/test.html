@@ -6,13 +6,13 @@
         <div class="container-fluid">
             <h3>{{ test.question }}</h3>
             {% for err in form.answer.errors %}
-                <div class="alert alert-danger">{{ err }} {{ right_answers }}</div>
+                <div class="alert alert-danger">{{ err }} <strong>{{ right_answers }}</strong></div>
                 <p>
                     {{ test.explanation }}
                 </p>
             {% endfor %}
             {% if not form.answer.errors and next %}
-                <div class="alert alert-success">Right, allowed answers: {{ right_answers }}</div>
+                <div class="alert alert-success">Right, allowed answers: <strong>{{ right_answers }}</strong></div>
             {% endif %}
         </div>
         <br>
